@@ -23,41 +23,56 @@ app.post("/webhook", async (req, res) => {
     req.body.queryResult.parameters["geo_city"];
   const date = req.body.queryResult.parameters["date"];
   try {
-    // STEP 1: Get coordinates
-    const geo = await axios.get(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`,
-    );
-
-    const lat = geo.data[0].lat;
-    const lon = geo.data[0].lon;
-
-    // STEP 2: One Call API
-    const weather = await axios.get(
-      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely,hourly,alerts&appid=${API_KEY}`,
-    );
-
-    // CURRENT WEATHER
+   
     if (intent === "current.weather") {
-      
 
-      const messages = [
-        `Current weather in ${city}`,
-        `🌡 Temperature: ${weather.data.current.temp}°C (feels like ${weather.data.current.feels_like}°C)`,
-        `🌤 Condition: ${weather.data.current.weather[0].description}`,
-        `💧 Humidity: ${weather.data.current.humidity}%`,
-        `🌬 Wind Speed: ${weather.data.current.wind_speed} m/s`,
-        `👁 Visibility: ${weather.data.current.visibility} meters`,
-      ];
+  //  Call CURRENT WEATHER API (2.5)
+  const weather = await axios.get(
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+  );
 
-      return res.json({
-        fulfillmentMessages: messages.map((msg) => ({
-          text: { text: [msg] },
-        })),
-      });
-    }
+  const data = weather.data;
+
+  const messages = [
+    `Current weather in ${city}`,
+    `🌡 Temperature: ${data.main.temp}°C (feels like ${data.main.feels_like}°C)`,
+    `🌤 Condition: ${data.weather[0].description}`,
+    `💧 Humidity: ${data.main.humidity}%`,
+    `🌬 Wind Speed: ${data.wind.speed} m/s`,
+    `👁 Visibility: ${data.visibility} meters`,
+  ];
+
+  return res.json({
+    fulfillmentMessages: messages.map((msg) => ({
+      text: { text: [msg] },
+    })),
+  });
+}
 
     // FORECAST LOGIC (WITH DATE)
     if (intent === "weather.forecast") {
+
+// STEP 1: Get coordinates (ONLY for forecast)
+const geo = await axios.get(
+  `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
+);
+
+if (!geo.data.length) {
+  return res.json({
+    fulfillmentText: `Sorry, I couldn't find that city.`,
+  });
+}
+
+const lat = geo.data[0].lat;
+const lon = geo.data[0].lon;
+
+// STEP 2: One Call API (forecast)
+const weather = await axios.get(
+  `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely,hourly,alerts&appid=${API_KEY}`
+);
+
+
+
       let startIndex = 0;
 
       if (date) {
