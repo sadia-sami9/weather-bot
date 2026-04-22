@@ -8,13 +8,13 @@ It provides users with:
 *  Current weather information
 *  8-day weather forecast
 
-The bot integrates with the **OpenWeather API** and returns clean, user-friendly responses.
+The bot integrates with the OpenWeather API and returns clean, user-friendly responses.
 
----
 
-## ⚙️ Features
 
-### ✅ Current Weather
+##  Features
+
+###  Current Weather
 
 * Temperature (with feels like)
 * Weather condition
@@ -22,7 +22,7 @@ The bot integrates with the **OpenWeather API** and returns clean, user-friendly
 * Wind speed
 * Visibility
 
-### ✅ Weather Forecast (Up to 8 Days)
+###  Weather Forecast (Up to 8 Days)
 
 * Date-wise forecast
 * Temperature (day, min, max, feels like)
@@ -30,51 +30,37 @@ The bot integrates with the **OpenWeather API** and returns clean, user-friendly
 * Humidity
 * Wind speed
 
-### ✅ Smart Handling
+###  Smart Handling
 
 * Supports user-provided dates
 * Validates forecast range (max 8 days)
 * Handles invalid city inputs
 * Clean formatted responses for chatbot UI
 
----
 
-## 🧠 Key Implementation Details
 
-### 🔹 Optimized API Usage
+##  Key Implementation Details
 
-* Uses **Current Weather API (2.5)** for real-time weather → lightweight
-* Uses **One Call API (3.0)** only for forecast → efficient
+###  Optimized API Usage
+
+* Uses Current Weather API (2.5) for real-time weather → lightweight
+* Uses One Call API (3.0) only for forecast → efficient
 * Avoids unnecessary data using:
 
   ```
   exclude=minutely,hourly,alerts
   ```
 
----
 
-### 🔹 Dialogflow Response Formatting
-
-Instead of using `\n` for line breaks (which does not render properly in Dialogflow UI),
-the bot sends **multiple messages using `fulfillmentMessages`**.
-
-This ensures:
-
-* Proper line-by-line display
-* Better readability
-* Cleaner user experience
-
----
-
-### 🔹 Date Handling Logic
+###  Date Handling Logic
 
 * Converts user input date to local format
 * Calculates difference from current date
 * Maps it to the correct forecast day index
 
----
 
-## 🛠 Tech Stack
+
+##  Tech Stack
 
 * Node.js
 * Express.js
@@ -84,7 +70,7 @@ This ensures:
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 project-folder/
@@ -99,7 +85,7 @@ project-folder/
 
 ---
 
-## 🔐 Environment Variables
+##  Environment Variables
 
 Create a `.env` file in the root directory:
 
@@ -109,7 +95,7 @@ API_KEY=your_openweather_api_key
 
 ---
 
-## ▶️ How to Run
+##  How to Run
 
 ### 1. Install dependencies
 
@@ -155,23 +141,4 @@ http://api.openweathermap.org/geo/1.0/direct
 
 ---
 
-## ⚠️ Notes
 
-* `node_modules` and `.env` are excluded using `.gitignore`
-* API key is stored securely using environment variables
-* ngrok is used for local webhook testing
-
----
-
-## 🚀 Future Improvements
-
-* Add weather icons
-* Add unit conversion (°C / °F)
-* Add more conversational responses
-* Deploy to cloud (e.g., Render / Vercel)
-
----
-
-## 👨‍💻 Author
-
-Developed as part of a Dialogflow + API integration assignment.
